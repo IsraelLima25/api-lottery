@@ -2,26 +2,42 @@ package com.dev.lima.lottery.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Bet implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private LocalDate date;
-	private Integer number;
+	
+	@ElementCollection
+	private List<Integer> numbers = new ArrayList<>();
+	
+	@ManyToOne
+	@JoinColumn(name = "person_id")
+	@JsonBackReference
+	private Person person;
 
 	public Bet() {
-
 	}
 
-	public Bet(Integer id, LocalDate date, Integer number) {
-		this.id = id;
+	public Bet(LocalDate date) {
 		this.date = date;
-		this.number = number;
 	}
 
 	public Integer getId() {
@@ -40,12 +56,20 @@ public class Bet implements Serializable {
 		this.date = date;
 	}
 
-	public Integer getNumber() {
-		return number;
+	public List<Integer> getNumbers() {
+		return numbers;
 	}
-
-	public void setNumber(Integer number) {
-		this.number = number;
+	
+	public void setNumbers(List<Integer> numbers) {
+		this.numbers = numbers;
+	}
+	
+	public Person getPerson() {
+		return person;
+	}
+	
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 
 	@Override
@@ -72,7 +96,5 @@ public class Bet implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
 
 }

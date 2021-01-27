@@ -1,9 +1,13 @@
 package com.dev.lima.lottery.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Person implements Serializable {
@@ -12,15 +16,15 @@ public class Person implements Serializable {
 
 	@Id
 	private String email;
-	private String name;
+	
+	@OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
+	private List<Bet> bets = new ArrayList<>();
 
 	public Person() {
-
 	}
 
-	public Person(String email, String nome) {
+	public Person(String email) {
 		this.email = email;
-		this.name = nome;
 	}
 
 	public String getEmail() {
@@ -31,12 +35,8 @@ public class Person implements Serializable {
 		this.email = email;
 	}
 
-	public String getNome() {
-		return name;
-	}
-
-	public void setNome(String nome) {
-		this.name = nome;
+	public List<Bet> getBets() {
+		return bets;
 	}
 
 	@Override
