@@ -26,7 +26,7 @@ public class BetService {
 	private BetRepository repositoryBet;
 
 	public List<Integer> validCreateBet(String email) {
-		if (!emailExists(email)) {
+		if (emailExists(email)) {
 			PersonDTO personDTO = new PersonDTO(email);
 			Person personSave = personService.savePerson(personDTO);
 			List<Integer> numbersSorty = createBet(personSave);
@@ -77,7 +77,8 @@ public class BetService {
 	}
 
 	private boolean emailExists(String email) {
-		return personService.findPersonByEmail(email) != null;
+		PersonDTO findPersonByEmail = personService.findPersonByEmail(email);
+		return findPersonByEmail.getId() == null ? true : false;
 	}
 
 }

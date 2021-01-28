@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dev.lima.lottery.dto.PersonDTO;
 import com.dev.lima.lottery.service.BetService;
 
 @RestController
@@ -18,10 +19,10 @@ public class BetResource {
 	@Autowired
 	private BetService betService;
 
-	@GetMapping("/api/create/bet")
-	public ResponseEntity<List<Integer>> createBet(@RequestParam String email) {
+	@PostMapping("/create")
+	public ResponseEntity<List<Integer>> createBet(@RequestBody PersonDTO obj) {
 
-		List<Integer> listNumbersSorty = betService.validCreateBet(email);
+		List<Integer> listNumbersSorty = betService.validCreateBet(obj.getEmail());
 		return ResponseEntity.ok(listNumbersSorty);
 	}
 

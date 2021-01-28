@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dev.lima.lottery.model.Person;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class BetDTO implements Serializable {
 
@@ -15,7 +16,8 @@ public class BetDTO implements Serializable {
 	private LocalDate date;
 
 	private List<Integer> numbers = new ArrayList<>();
-
+	
+	@JsonIgnore
 	private Person person;
 
 	public BetDTO() {
