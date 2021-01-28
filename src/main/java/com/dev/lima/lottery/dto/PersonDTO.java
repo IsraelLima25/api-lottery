@@ -4,12 +4,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 public class PersonDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-
+	
+	@NotBlank
+	@Email
 	private String email;
 
 	private List<BetDTO> bets = new ArrayList<>();

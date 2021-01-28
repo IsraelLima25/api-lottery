@@ -2,6 +2,8 @@ package com.dev.lima.lottery.resource;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +22,7 @@ public class BetResource {
 	private BetService betService;
 
 	@PostMapping("/create")
-	public ResponseEntity<List<Integer>> createBet(@RequestBody PersonDTO obj) {
+	public ResponseEntity<List<Integer>> createBet(@Valid @RequestBody PersonDTO obj) {
 
 		List<Integer> listNumbersSorty = betService.validCreateBet(obj.getEmail());
 		return ResponseEntity.ok(listNumbersSorty);
