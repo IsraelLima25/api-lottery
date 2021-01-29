@@ -12,6 +12,7 @@ import com.dev.lima.lottery.dto.PersonDTO;
 import com.dev.lima.lottery.exception.ResourceNotFoundException;
 import com.dev.lima.lottery.model.Person;
 import com.dev.lima.lottery.repository.PersonRepository;
+import com.dev.lima.lottery.util.ConverterBet;
 import com.dev.lima.lottery.util.ConverterPerson;
 
 @Service
@@ -23,9 +24,13 @@ public class PersonService {
 	@Autowired
 	private ConverterPerson converterPerson;
 	
+	@Autowired
+	private ConverterBet convertBet;
+	
 	
 	public PersonDTO findPersonByEmail(String email) {
 		Optional<Person> person = repositoryPerson.findOptionalByEmail(email);
+		
 		if(!person.isPresent()) {
 			throw new ResourceNotFoundException();
 		}
@@ -34,7 +39,7 @@ public class PersonService {
 		
 		personDTO = new PersonDTO();
 		BeanUtils.copyProperties(person.get(), personDTO);
-		List<BetDTO> listBetDTO = converterPerson.toBetFromBetDTO(person.get().getBets());
+		List<BetDTO> listBetDTO = convertBet.toBetListFromBetLisDTO(person.get().getBets());
 		
 		for(BetDTO betDTO: listBetDTO) {
 			personDTO.getBets().add(betDTO);
@@ -44,8 +49,7 @@ public class PersonService {
 	}
 
 	public Person savePerson(PersonDTO personDTO) {
-		Person person = new Person();
-		BeanUtils.copyProperties(personDTO, person);
+		Person person = converterPerson.toPersonFromPersonDTO(personDTO);
 
 		Person personSave = repositoryPerson.save(person);
 

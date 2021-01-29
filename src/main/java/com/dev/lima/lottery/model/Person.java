@@ -11,6 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+/**
+* @author Israel
+*/
+
 @Entity
 public class Person implements Serializable {
 
@@ -78,5 +82,4 @@ public class Person implements Serializable {
 			return false;
 		return true;
 	}
-
 }

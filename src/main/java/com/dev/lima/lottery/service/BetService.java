@@ -1,84 +1,53 @@
 package com.dev.lima.lottery.service;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dev.lima.lottery.dto.PersonDTO;
+import com.dev.lima.lottery.dto.BetDTO;
+import com.dev.lima.lottery.exception.ResourceNotFoundException;
 import com.dev.lima.lottery.model.Bet;
-import com.dev.lima.lottery.model.Person;
 import com.dev.lima.lottery.repository.BetRepository;
-import com.dev.lima.lottery.util.RandomNumber;
+import com.dev.lima.lottery.util.BetBuilder;
 
 @Service
 public class BetService {
 
 	@Autowired
-	private PersonService personService;
-	
-	@Autowired
-	private RandomNumber random;
+	private BetBuilder builderBet;
 
 	@Autowired
 	private BetRepository repositoryBet;
 
-	public List<Integer> validCreateBet(String email) {
-		if (emailExists(email)) {
-			PersonDTO personDTO = new PersonDTO(email);
-			Person personSave = personService.savePerson(personDTO);
-			List<Integer> numbersSorty = createBet(personSave);
+	public BetDTO findById(Integer id) {
 
-			return numbersSorty;
+		Optional<Bet> betFind = repositoryBet.findById(id);
 
-		} else {
-			PersonDTO personDTO = personService.findPersonByEmail(email);
-			Person person = new Person();
-			BeanUtils.copyProperties(personDTO, person);
-			List<Integer> numbersSorty = createBet(person);
-
-			return numbersSorty;
-		}
-	}
-
-	private List<Integer> createBet(Person person) {
-		
-		List<Integer> numbersListSorty = random.getNumberListSorty();
-		
-		Bet bet = new Bet(LocalDate.now());
-		for (Integer number : numbersListSorty) {
-			bet.getNumbers().add(number);
+		if (betFind.isEmpty()) {
+			throw new ResourceNotFoundException();
 		}
 
-		Bet betSave = saveBet(bet);
+		BetDTO betDTO = new BetDTO();
 
-		person.getBets().add(betSave);
+		BeanUtils.copyProperties(betFind.get(), betDTO);
 
-		PersonDTO personDTO = new PersonDTO();
-
-		BeanUtils.copyProperties(person, personDTO);
-
-		personService.savePerson(personDTO);
-
-		betSave.setPerson(person);
-
-		saveBet(bet);
-
-		return numbersListSorty;
-
+		return betDTO;
 	}
 
-	private Bet saveBet(Bet bet) {
+	public BetDTO builderBet(String emailPerson) {
+		
+		BetDTO betBuilder = builderBet.confirmBuilder(emailPerson);
+		
+		return betBuilder;
+	}
+
+	public Bet saveBet(Bet bet) {
 
 		Bet betSave = repositoryBet.save(bet);
 		return betSave;
 	}
 
-	private boolean emailExists(String email) {
-		PersonDTO findPersonByEmail = personService.findPersonByEmail(email);
-		return findPersonByEmail.getId() == null ? true : false;
-	}
 
 }
