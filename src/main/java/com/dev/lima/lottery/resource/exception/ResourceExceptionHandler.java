@@ -49,7 +49,7 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
 	
-	@ExceptionHandler( ConstraintViolationException.class )
+	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<StandarError> constraintViolation(ConstraintViolationException e,
 			HttpServletRequest request) {
 		
